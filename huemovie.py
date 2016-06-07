@@ -30,43 +30,47 @@ def colour_density(val,size):
     return val/math.pow(size,2)
 
 def run():
-    screenshot = ImageGrab.grab()
-    colors = get_colours(screenshot, sample_size, num_globes)
-    colors = [c for c in colors]
-    colors += [None]*(3-len(colors))
-    x = 0
+    try:
+        screenshot = ImageGrab.grab()
+        colors = get_colours(screenshot, sample_size, num_globes)
+        colors = [c for c in colors]
+        colors += [None]*(3-len(colors))
+        x = 0
 
-    for color in colors:
-        x = x+1
-        if color is None:
-            resource = {
-                'which': x,
-                'data':{
-                    'state':{'on':False}
+        for color in colors:
+            x = x+1
+            if color is None:
+                resource = {
+                    'which': x,
+                    'data':{
+                        'state':{'on':False}
+                    }
                 }
-            }
-        else:
-            amt = color[0]
-            r = color[1][0]
-            g = color[1][1]
-            b = color[1][2]
+            else:
+                amt = color[0]
+                r = color[1][0]
+                g = color[1][1]
+                b = color[1][2]
 
-            hsv = colorsys.rgb_to_hsv(r, g, b)
-            xy = converter.rgbToCIE1931(r, g, b)
-            density = colour_density(amt, sample_size)
-            hue = hsv[0]
-            sat = hsv[1]
-            bri = hsv[2]
-            state = bri>brightness_threshold and density>density_threshold
+                hsv = colorsys.rgb_to_hsv(r, g, b)
+                xy = converter.rgbToCIE1931(r, g, b)
+                density = colour_density(amt, sample_size)
+                hue = hsv[0]
+                sat = hsv[1]
+                bri = hsv[2]
+                state = bri>brightness_threshold and density>density_threshold
 
-            resource = {
-                'which': x,
-                'data':{
-                    'state':{'on':state, 'xy':xy, 'bri': bri}
+                resource = {
+                    'which': x,
+                    'data':{
+                        'state':{'on':state, 'xy':xy, 'bri': bri}
+                    }
                 }
-            }
 
-        bridge.light.update(resource)
+            bridge.light.update(resource)
+    except Exception as e:
+        print("Exception: %s" % str(e))
+
 
 if __name__ == '__main__':
     while True:
