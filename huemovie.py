@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw
 from beautifulhue.api import Bridge
-from converter import ColorHelper, Converter
+from lib import ColorHelper, Converter
 import pyscreenshot as ImageGrab
 import time
 import colorsys
