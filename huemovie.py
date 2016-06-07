@@ -18,11 +18,10 @@ username = os.environ['HUE_USERNAME']       # Username set up on your Hue Bridge
 bridge = Bridge(device={ 'ip': ip }, user={ 'name': username })
 converter = Converter()
 
-def get_colors(image, resize, numcolors):
+def get_colours(image, resize, palettesize):
     image = image.resize((resize, resize))
-    result = image.convert('P', palette=Image.ADAPTIVE, colors=numcolors)
+    result = image.convert('P', palette=Image.ADAPTIVE, colors=palettesize)
     result.putalpha(0)
-    #result.save('screenshot.gif')
     colors = result.getcolors()
 
     return sorted(colors, reverse=True)
@@ -32,7 +31,7 @@ def colour_density(val,size):
 
 def run():
     screenshot = ImageGrab.grab()
-    colors = get_colors(screenshot, sample_size, num_globes)
+    colors = get_colours(screenshot, sample_size, num_globes)
     colors = [c for c in colors]
     colors += [None]*(3-len(colors))
     x = 0
