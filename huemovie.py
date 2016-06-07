@@ -30,7 +30,7 @@ def colour_density(val,size):
     return val/math.pow(size,2)
 
 def run():
-    try:
+    #try:
         screenshot = ImageGrab.grab()
         colors = get_colours(screenshot, sample_size, num_globes)
         colors = [c for c in colors]
@@ -48,16 +48,11 @@ def run():
                 }
             else:
                 amt = color[0]
-                r = color[1][0]
-                g = color[1][1]
-                b = color[1][2]
-
+                r, g, b, a = color[1]
+                density = colour_density(amt, sample_size)
                 hsv = colorsys.rgb_to_hsv(r, g, b)
                 xy = converter.rgbToCIE1931(r, g, b)
-                density = colour_density(amt, sample_size)
-                hue = hsv[0]
-                sat = hsv[1]
-                bri = hsv[2]
+                hue,sat,bri = hsv
                 state = bri>brightness_threshold and density>density_threshold
 
                 resource = {
@@ -68,8 +63,8 @@ def run():
                 }
 
             bridge.light.update(resource)
-    except Exception as e:
-        print("Exception: %s" % str(e))
+    #except Exception as e:
+        #print("Exception: %s" % str(e))
 
 
 if __name__ == '__main__':
