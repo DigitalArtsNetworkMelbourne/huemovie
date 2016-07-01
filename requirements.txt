@@ -1,2 +1,4 @@
 Pillow==3.1.1
 BeautifulHue==0.1.2
+progressbar==2.3
+colorama==0.3.3
