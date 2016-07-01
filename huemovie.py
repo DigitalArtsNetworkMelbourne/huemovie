@@ -9,8 +9,8 @@ import colorsys
 import math
 import os
 
-sample_rate = 5							 # Frames per Second. Philips Hue documentation recommends no more than 10 requests per second, so try and stay below 10.
-sample_size = 50							# Resize the screenshot to this size
+sample_rate = 10							 # Frames per Second. Philips Hue documentation recommends no more than 10 requests per second, so try and stay below 10.
+sample_size = 100							# Resize the screenshot to this size
 brightness_threshold = 5					# Turn the lights off completely when brightness below this value (max 255)
 density_threshold = 0.01					# Ignore colours below a certain density
 num_globes = 3							  # Number of hue globes to update
@@ -32,38 +32,6 @@ def get_colours(image, resize, palettesize):
 
 def colour_density(val,size):
 	return val/math.pow(size,2)
-
-def stats(resources):
-	tw, th = terminalsize.get_terminal_size()
-	stdout.write("\r")
-	indent_length = 8
-	tw = tw-indent_length
-
-	for r in resources:
-		resource, r, g, b = r
-		stdout.write("Globe %s" % str(resource['which']))
-		stdout.write("\n-------------------\n")
-		stdout.write("Red:	")
-		stdout.write(Back.RED)
-
-		for i in range(0, int(tw*(r/255.0))):
-			stdout.write(' ')
-		print(Style.RESET_ALL)
-
-		stdout.write("Green:  ")
-		stdout.write(Back.GREEN)
-		for i in range(0, int(tw*(g/255.0))):
-			stdout.write(' ')
-		print(Style.RESET_ALL)
-
-		stdout.write("Blue:   ")
-		stdout.write(Back.BLUE)
-		for i in range(0, int(tw*(b/255.0))):
-			stdout.write(' ')
-		print(Style.RESET_ALL)
-		stdout.write("\n-------------------\n")
-
-	stdout.flush()
 
 def run():
 	try:
@@ -101,7 +69,6 @@ def run():
 
 			bridge.light.update(resource)
 			resources.append((resource, r, g, b))
-		stats(resources)
 	except Exception as e:
 		stdout.write("Exception: %s" % str(e))
 		stdout.flush()
@@ -110,4 +77,4 @@ def run():
 if __name__ == '__main__':
 	while True:
 		run()
-		sleep(1000/sample_rate);
+		sleep((1000/sample_rate)/1000)
